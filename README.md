@@ -31,9 +31,16 @@
 - **全页预览** — 新窗口预览包含所有分页的完整效果
 - **零依赖** — 纯 HTML/CSS/JS，无需 Node.js、无需构建工具
 
+## 多语言支持
+
+| 文件 | 语言 | 说明 |
+|------|------|------|
+| `index.html` | 中文 | 默认入口，中文界面 |
+| `index-en.html` | English | 英文界面 |
+
 ## 在线体验
 
-直接打开项目中的 `index.html` 即可使用，无需任何环境配置。
+直接打开项目中的 `index.html`（中文版）或 `index-en.html`（英文版）即可使用，无需任何环境配置。
 
 ## 快速开始
 
@@ -91,7 +98,8 @@ python -m http.server 8080
 
 ```
 html-page-editor/
-├── index.html      # 编辑器（单文件，包含所有代码）
+├── index.html      # 编辑器 - 中文版（默认）
+├── index-en.html   # 编辑器 - English version
 ├── README.md       # 项目说明
 ├── LICENSE         # MIT 开源协议
 └── .gitignore      # Git 忽略规则

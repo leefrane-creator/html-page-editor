@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HTML 页面工作室 - 可视化编辑器</title>
+  <title>HTML Page Studio</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
       --primary: #0D9488;
@@ -35,7 +35,7 @@
       --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
       --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
       --transition: 150ms ease;
-      --font: 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+      --font: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
       --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
     }
 
@@ -43,14 +43,14 @@
     body { font-family: var(--font); background: var(--bg); color: var(--text); display: flex; flex-direction: column; height: 100vh; overflow: hidden; font-size: 14px; }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
 
-    /* ── 顶栏 ── */
+    /* ── Header ── */
     .header { background: var(--surface); height: 56px; padding: 0 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; z-index: 50; }
     .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; color: var(--text); letter-spacing: -0.02em; }
     .logo svg { width: 28px; height: 28px; color: var(--primary); }
     .logo-badge { font-size: 10px; font-weight: 600; background: var(--primary); color: #fff; padding: 2px 7px; border-radius: 10px; letter-spacing: 0.02em; }
     .actions { display: flex; gap: 8px; align-items: center; }
 
-    /* ── 按钮 ── */
+    /* ── Buttons ── */
     .btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text-secondary); cursor: pointer; font-weight: 500; font-size: 13px; font-family: var(--font); transition: all var(--transition); white-space: nowrap; }
     .btn:hover { background: var(--surface-hover); border-color: var(--primary); color: var(--primary); }
     .btn:active { transform: scale(0.98); }
@@ -68,22 +68,22 @@
     .btn:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
     .btn:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 
-    /* ── 输入框 ── */
+    /* ── Input ── */
     .input-field { font-family: var(--font); width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; outline: none; transition: all var(--transition); color: var(--text); background: var(--surface); }
     .input-field:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(13,148,136,0.12); }
     .input-field::placeholder { color: var(--text-muted); }
     .input-sm { width: 140px; margin-bottom: 0; }
 
-    /* ── 主布局 ── */
+    /* ── Main Layout ── */
     .main-layout { flex: 1; display: flex; overflow: hidden; }
 
-    /* ── 画布 ── */
+    /* ── Canvas ── */
     .canvas-area { flex: 1; padding: 20px 24px 72px; overflow: auto; display: flex; flex-direction: column; align-items: flex-start; position: relative; background: var(--bg-canvas); }
-    .canvas-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; font-size: 12px; color: var(--text-muted); font-weight: 500; letter-spacing: 0.06em; }
+    .canvas-header { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; font-size: 12px; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; }
     .canvas-header svg { width: 14px; height: 14px; }
     .canvas-window { min-width: 600px; width: max-content; background: var(--surface); border-radius: var(--radius-lg); box-shadow: var(--shadow); min-height: auto; padding: 40px; position: relative; outline: none; border: 1px solid var(--border); }
 
-    /* ── 翻页导航 ── */
+    /* ── Page Nav ── */
     .page-nav { position: fixed; bottom: 0; left: 0; width: calc(100% - 400px); height: 52px; background: var(--surface); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: center; gap: 8px; padding: 0 20px; z-index: 100; }
     .page-nav-btn { width: 32px; height: 32px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all var(--transition); color: var(--text-secondary); }
     .page-nav-btn:hover:not(:disabled) { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
@@ -94,7 +94,7 @@
     .page-indicator input:focus { border-color: var(--primary); }
     .page-nav-divider { width: 1px; height: 24px; background: var(--border); margin: 0 4px; }
 
-    /* ── 侧栏 ── */
+    /* ── Sidebar ── */
     .sidebar { width: 400px; background: var(--surface); border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0; }
     .tab-group { display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0; }
     .tab { flex: 1; padding: 12px 8px; text-align: center; font-size: 12px; font-weight: 500; cursor: pointer; color: var(--text-muted); border-bottom: 2px solid transparent; transition: all var(--transition); display: flex; align-items: center; justify-content: center; gap: 5px; user-select: none; }
@@ -108,12 +108,12 @@
     .panel-title { font-size: 12px; font-weight: 600; margin-bottom: 10px; color: var(--text); display: flex; align-items: center; gap: 6px; }
     .panel-title::before { content: ''; width: 3px; height: 14px; background: var(--primary); border-radius: 2px; }
 
-    /* ── 代码编辑区 ── */
+    /* ── Code Editor ── */
     .code-textarea { font-family: var(--font-mono); width: 100%; height: 220px; font-size: 12px; line-height: 1.7; background: var(--code-bg); color: var(--code-text); padding: 14px; border-radius: var(--radius); resize: vertical; border: none; outline: none; }
     .code-textarea:focus { box-shadow: 0 0 0 2px var(--primary); }
     .code-textarea::placeholder { color: #64748B; }
 
-    /* ── 浮动工具栏 ── */
+    /* ── Floating Toolbar ── */
     .text-toolbar { position: fixed; background: var(--code-bg); color: #E2E8F0; padding: 6px 8px; border-radius: var(--radius); display: none; gap: 2px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.3); z-index: 9999; align-items: center; border: 1px solid #334155; }
     .tool-btn { background: transparent; border: none; color: #CBD5E1; padding: 5px 8px; cursor: pointer; border-radius: 4px; font-size: 13px; font-weight: 700; transition: all 120ms ease; display: flex; align-items: center; justify-content: center; }
     .tool-btn:hover { background: #334155; color: #fff; }
@@ -121,7 +121,7 @@
     .tool-divider { width: 1px; height: 18px; background: #475569; margin: 0 3px; }
     .tool-color { width: 22px; height: 22px; border: 2px solid #475569; padding: 0; background: transparent; cursor: pointer; border-radius: 4px; }
 
-    /* ── 已保存列表 ── */
+    /* ── Saved List ── */
     .saved-list { list-style: none; flex: 1; overflow-y: auto; }
     .saved-item { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: var(--radius-sm); margin-bottom: 4px; font-size: 13px; cursor: pointer; transition: all var(--transition); border: 1px solid transparent; }
     .saved-item:hover { background: var(--primary-light); border-color: rgba(13,148,136,0.2); }
@@ -130,25 +130,25 @@
     .saved-empty { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 13px; }
     .saved-empty svg { width: 40px; height: 40px; margin-bottom: 12px; opacity: 0.4; }
 
-    /* ── 弹窗 ── */
+    /* ── Modal ── */
     .modal-mask { position: fixed; inset: 0; background: rgba(15,23,42,0.5); display: none; z-index: 1000; backdrop-filter: blur(4px); }
     .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--surface); padding: 24px; border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); display: none; z-index: 1001; width: 440px; border: 1px solid var(--border); }
     .modal h3 { font-size: 16px; margin-bottom: 16px; color: var(--text); font-weight: 600; }
     .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
 
-    /* ── 提示 ── */
+    /* ── Toast ── */
     .toast { position: fixed; bottom: 72px; left: 50%; transform: translateX(-50%) translateY(8px); background: var(--text); color: #fff; padding: 10px 20px; border-radius: var(--radius); font-size: 13px; z-index: 9999; opacity: 0; transition: all 200ms ease; pointer-events: none; font-weight: 500; display: flex; align-items: center; gap: 6px; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
     .toast.success { background: var(--success); }
     .toast.error { background: var(--danger); }
 
-    /* ── 可编辑元素 ── */
+    /* ── Editable Elements ── */
     .canvas-window [contenteditable="true"] { transition: outline 120ms ease, background 120ms ease; border-radius: 2px; cursor: text; }
     .canvas-window [contenteditable="true"]:hover { outline: 2px dashed rgba(13,148,136,0.4); }
     .canvas-window [contenteditable="true"]:focus { outline: 2px solid var(--primary); background: rgba(13,148,136,0.06); }
     .canvas-window img:hover, .canvas-window video:hover { outline: 3px solid var(--cta); cursor: pointer; opacity: 0.9; transition: all 150ms ease; }
 
-    /* ── 帮助面板 ── */
+    /* ── Help Panel ── */
     .help-card { background: var(--primary-light); border: 1px solid rgba(13,148,136,0.15); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 14px; }
     .help-card-title { font-size: 13px; font-weight: 600; color: var(--primary-hover); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
     .help-card-title svg { width: 15px; height: 15px; }
@@ -157,7 +157,7 @@
     .help-step { display: flex; gap: 8px; margin-bottom: 4px; }
     .help-step-num { width: 18px; height: 18px; border-radius: 50%; background: var(--primary); color: #fff; font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
 
-    /* ── 空状态 ── */
+    /* ── Empty State ── */
     .empty-state { text-align: center; color: var(--text-muted); padding: 80px 40px; }
     .empty-state svg { width: 56px; height: 56px; margin-bottom: 16px; opacity: 0.3; }
     .empty-state h3 { font-size: 16px; color: var(--text-secondary); margin-bottom: 6px; font-weight: 600; }
@@ -166,220 +166,219 @@
 </head>
 <body>
 
-  <!-- 顶部导航 -->
+  <!-- Header -->
   <header class="header">
     <div class="logo">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-      <span>页面工作室</span>
-      <span class="logo-badge">在线版</span>
+      <span>Page Studio</span>
+      <span class="logo-badge">ONLINE</span>
     </div>
     <div class="actions">
-      <input type="text" id="pageIdInput" class="input-field input-sm" value="my-page" placeholder="页面ID" aria-label="页面ID">
-      <button class="btn" id="importFileBtn" title="导入 HTML 文件">
+      <input type="text" id="pageIdInput" class="input-field input-sm" value="my-page" placeholder="Page ID" aria-label="Page ID">
+      <button class="btn" id="importFileBtn" title="Import HTML file">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        导入文件
+        Import
       </button>
       <input type="file" id="fileInput" accept=".html,.htm" style="display:none;" aria-hidden="true">
-      <button class="btn" id="saveBtn" title="保存到浏览器本地">
+      <button class="btn" id="saveBtn" title="Save to browser">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-        保存
+        Save
       </button>
-      <button class="btn btn-cta" id="exportBtn" title="下载 HTML 文件">
+      <button class="btn btn-cta" id="exportBtn" title="Download HTML file">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        导出 HTML
+        Export
       </button>
-      <button class="btn btn-primary" id="previewFullBtn" title="新窗口预览完整页面">
+      <button class="btn btn-primary" id="previewFullBtn" title="Preview full page">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        预览全页
+        Preview
       </button>
     </div>
   </header>
 
-  <!-- 主区域 -->
+  <!-- Main -->
   <div class="main-layout">
-    <!-- 画布 -->
+    <!-- Canvas -->
     <div class="canvas-area">
       <div class="text-toolbar" id="textToolbar">
-        <button class="tool-btn" data-cmd="bold" title="加粗"><b>B</b></button>
-        <button class="tool-btn" data-cmd="italic" title="斜体"><i>I</i></button>
-        <button class="tool-btn" data-cmd="underline" title="下划线"><u>U</u></button>
+        <button class="tool-btn" data-cmd="bold" title="Bold"><b>B</b></button>
+        <button class="tool-btn" data-cmd="italic" title="Italic"><i>I</i></button>
+        <button class="tool-btn" data-cmd="underline" title="Underline"><u>U</u></button>
         <div class="tool-divider"></div>
-        <button class="tool-btn" data-cmd="justifyLeft" title="左对齐">
+        <button class="tool-btn" data-cmd="justifyLeft" title="Align left">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg>
         </button>
-        <button class="tool-btn" data-cmd="justifyCenter" title="居中">
+        <button class="tool-btn" data-cmd="justifyCenter" title="Align center">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="10" x2="6" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="18" y1="18" x2="6" y2="18"/></svg>
         </button>
-        <button class="tool-btn" data-cmd="justifyRight" title="右对齐">
+        <button class="tool-btn" data-cmd="justifyRight" title="Align right">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="21" y1="10" x2="7" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="21" y1="18" x2="7" y2="18"/></svg>
         </button>
         <div class="tool-divider"></div>
-        <input type="color" class="tool-color" id="textColorPicker" title="字体颜色" value="#134E4A">
-        <input type="color" class="tool-color" id="bgColorPicker" title="背景高亮" value="#CCFBF1">
+        <input type="color" class="tool-color" id="textColorPicker" title="Font color" value="#134E4A">
+        <input type="color" class="tool-color" id="bgColorPicker" title="Highlight" value="#CCFBF1">
       </div>
 
       <div class="canvas-header">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-        画布
+        Canvas
       </div>
       <div class="canvas-window" id="canvasWindow">
         <div class="empty-state">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-          <h3>画布为空</h3>
-          <p>点击上方「导入文件」加载 HTML 文件，<br>或在右侧「源码」标签粘贴代码后点击「加载到画布」</p>
+          <h3>Canvas is empty</h3>
+          <p>Click <b>Import</b> to load an HTML file,<br>or paste source code and click "Load to Canvas"</p>
         </div>
       </div>
 
-      <!-- 翻页导航 -->
-      <nav class="page-nav" id="pageNav" aria-label="页面导航">
-        <button class="page-nav-btn" id="btnFirst" title="首页">
+      <!-- Page Nav -->
+      <nav class="page-nav" id="pageNav" aria-label="Page navigation">
+        <button class="page-nav-btn" id="btnFirst" title="First page">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="11 17 6 12 11 7"/><polyline points="18 17 13 12 18 7"/></svg>
         </button>
-        <button class="page-nav-btn" id="btnPrev" title="上一页">
+        <button class="page-nav-btn" id="btnPrev" title="Previous page">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
         </button>
         <div class="page-indicator">
-          <input type="number" id="pageInput" min="1" value="1" aria-label="页码"> / <span id="pageTotal">1</span>
+          <input type="number" id="pageInput" min="1" value="1" aria-label="Page number"> / <span id="pageTotal">1</span>
         </div>
-        <button class="page-nav-btn" id="btnNext" title="下一页">
+        <button class="page-nav-btn" id="btnNext" title="Next page">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
         </button>
-        <button class="page-nav-btn" id="btnLast" title="末页">
+        <button class="page-nav-btn" id="btnLast" title="Last page">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg>
         </button>
         <div class="page-nav-divider"></div>
         <button class="btn btn-sm btn-primary" id="btnAddPage">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          新增
+          New
         </button>
         <button class="btn btn-sm btn-danger" id="btnDelPage">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-          删除
+          Delete
         </button>
       </nav>
     </div>
 
-    <!-- 侧栏 -->
+    <!-- Sidebar -->
     <aside class="sidebar">
       <div class="tab-group" role="tablist">
         <div class="tab active" data-tab="editor" role="tab">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-          源码
+          Source
         </div>
         <div class="tab" data-tab="saved" role="tab">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-          已保存
+          Saved
         </div>
         <div class="tab" data-tab="help" role="tab">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          帮助
+          Help
         </div>
       </div>
 
-      <!-- 源码标签 -->
+      <!-- Editor Tab -->
       <div class="tab-panel active" id="tab-editor" role="tabpanel">
         <div class="sidebar-panel">
-          <div class="panel-title">HTML 源码</div>
-          <textarea class="code-textarea" id="sourceCodeArea" placeholder="在此粘贴 HTML 代码..." spellcheck="false"></textarea>
+          <div class="panel-title">HTML Source</div>
+          <textarea class="code-textarea" id="sourceCodeArea" placeholder="Paste HTML code here..." spellcheck="false"></textarea>
           <div style="display:flex; gap:8px; margin-top:10px;">
             <button class="btn btn-primary" id="importBtn" style="flex:1;">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              加载到画布
+              Load to Canvas
             </button>
-            <button class="btn btn-ghost" id="clearBtn" title="清空">
+            <button class="btn btn-ghost" id="clearBtn">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
           </div>
         </div>
         <div class="sidebar-panel">
-          <div class="panel-title">工具</div>
+          <div class="panel-title">Tools</div>
           <button class="btn" style="width:100%; margin-bottom:6px;" id="syncBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><polyline points="23 20 23 14 17 14"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
-            从画布同步
+            Sync from Canvas
           </button>
           <button class="btn" style="width:100%;" id="copyBtn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-            复制全部源码
+            Copy All Source
           </button>
         </div>
       </div>
 
-      <!-- 已保存标签 -->
+      <!-- Saved Tab -->
       <div class="tab-panel" id="tab-saved" role="tabpanel">
         <div class="sidebar-panel">
-          <div class="panel-title">已保存项目（本地）</div>
+          <div class="panel-title">Saved Projects (Local)</div>
           <ul class="saved-list" id="savedList">
             <li class="saved-empty">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg>
-              <div>暂无已保存项目</div>
+              <div>No saved projects yet</div>
             </li>
           </ul>
         </div>
       </div>
 
-      <!-- 帮助标签 -->
+      <!-- Help Tab -->
       <div class="tab-panel" id="tab-help" role="tabpanel">
         <div class="sidebar-panel" style="overflow-y:auto; flex:1;">
           <div class="help-card">
             <div class="help-card-title">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
-              如何分享
+              How to Share
             </div>
-            <div class="help-step"><span class="help-step-num">1</span><p>点击上方「导出 HTML」下载完整页面文件</p></div>
-            <div class="help-step"><span class="help-step-num">2</span><p>将文件发送给他人，用浏览器打开即可查看</p></div>
+            <p>1. Click <b>Export</b> to download the HTML file<br>2. Send the file to anyone - they can open it directly in a browser</p>
           </div>
 
           <div class="help-card">
             <div class="help-card-title">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-              导入内容
+              Import Content
             </div>
-            <p><b>方式一：</b>点击上方「导入文件」选择本地 .html 文件，自动加载</p>
-            <p><b>方式二：</b>在「源码」标签粘贴 HTML 代码，点击「加载到画布」</p>
+            <p><b>Method 1:</b> Click <b>Import</b> in the header to select a local .html file</p>
+            <p><b>Method 2:</b> Paste HTML source code in the "Source" tab, then click "Load to Canvas"</p>
           </div>
 
           <div class="help-card">
             <div class="help-card-title">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-              编辑内容
+              Edit Content
             </div>
-            <p>点击画布中的任意文字即可直接编辑，选中文字弹出格式化工具栏（加粗、斜体、颜色等）</p>
-            <p>点击图片/视频可替换其链接地址</p>
+            <p>Click any text to edit directly. Select text to show the formatting toolbar (bold, italic, color, etc.)</p>
+            <p>Click images/videos to replace their URL</p>
           </div>
 
           <div class="help-card">
             <div class="help-card-title">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-              多页管理
+              Multi-Page
             </div>
-            <p>底部导航栏可翻页、新增或删除页面。导出时所有页面会自动合并为一个完整 HTML 文件。</p>
+            <p>Use the bottom navigation bar to switch between pages. Add or delete pages as needed. All pages are merged when exporting.</p>
           </div>
 
           <div class="help-card">
             <div class="help-card-title">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-              智能分页
+              Auto Detection
             </div>
-            <p>自动识别 4 种分页模式：<code>.slide</code> 幻灯片、<code>&lt;hr class="page-break"&gt;</code>、连续 <code>&lt;hr&gt;</code>、<code>&lt;section&gt;</code> / <code>&lt;article&gt;</code> 标签。</p>
+            <p>Supports 4 page-split modes: <code>.slide</code> (slideshows), <code>&lt;hr class="page-break"&gt;</code>, consecutive <code>&lt;hr&gt;</code>, and <code>&lt;section&gt;</code> / <code>&lt;article&gt;</code> tags.</p>
           </div>
         </div>
       </div>
     </aside>
   </div>
 
-  <!-- 弹窗 -->
+  <!-- Modal -->
   <div class="modal-mask" id="modalMask"></div>
   <div class="modal" id="mediaModal">
-    <h3 id="modalTitle">替换资源</h3>
-    <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:4px;">资源链接</label>
+    <h3 id="modalTitle">Replace Resource</h3>
+    <label style="font-size:12px; color:var(--text-muted); display:block; margin-bottom:4px;">Resource URL</label>
     <input type="text" id="mediaUrlInput" class="input-field" placeholder="https://...">
     <div class="modal-actions">
-      <button class="btn" id="modalCancel">取消</button>
-      <button class="btn btn-primary" id="modalSave">确认</button>
+      <button class="btn" id="modalCancel">Cancel</button>
+      <button class="btn btn-primary" id="modalSave">Confirm</button>
     </div>
   </div>
 
-  <!-- 提示条 -->
+  <!-- Toast -->
   <div class="toast" id="toast"></div>
 
   <script>
@@ -417,7 +416,7 @@
     let pages = [];
     let currentPage = 0;
 
-    // ─── 提示条 ──
+    // ─── Toast ──
     function showToast(msg, type = '') {
       toastEl.textContent = msg;
       toastEl.className = `toast show ${type}`;
@@ -425,7 +424,7 @@
       toastTimer = setTimeout(() => { toastEl.className = 'toast'; }, 2500);
     }
 
-    // ─── 标签切换 ──
+    // ─── Tabs ──
     document.querySelectorAll('.tab').forEach(tab => {
       tab.addEventListener('click', () => {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -436,18 +435,18 @@
       });
     });
 
-    // ─── 默认模板 ──
+    // ─── Default template ──
     sourceCodeArea.value = `<div style="text-align:center; padding:40px 20px; font-family:system-ui,sans-serif;">
-  <h1 style="font-size:36px; color:#1e293b; margin-bottom:12px;">新一代云端平台</h1>
-  <p style="font-size:16px; color:#64748b; margin-bottom:28px;">点击这段文字即可直接编辑，选中文字会弹出格式化工具栏。</p>
+  <h1 style="font-size:36px; color:#1e293b; margin-bottom:12px;">Next-Gen Cloud Platform</h1>
+  <p style="font-size:16px; color:#64748b; margin-bottom:28px;">Click this text to edit directly. Select text to show the formatting toolbar.</p>
   <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&auto=format&fit=crop" style="width:100%;max-width:500px;border-radius:12px;margin-bottom:24px;" />
   <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;">
-    <button style="padding:12px 28px;background:#0D9488;color:#fff;border:none;border-radius:8px;font-size:16px;cursor:pointer;">立即开始</button>
-    <button style="padding:12px 28px;background:#fff;color:#334155;border:1px solid #e2e8f0;border-radius:8px;font-size:16px;cursor:pointer;">了解更多</button>
+    <button style="padding:12px 28px;background:#0D9488;color:#fff;border:none;border-radius:8px;font-size:16px;cursor:pointer;">Get Started</button>
+    <button style="padding:12px 28px;background:#fff;color:#334155;border:1px solid #e2e8f0;border-radius:8px;font-size:16px;cursor:pointer;">Learn More</button>
   </div>
 </div>`;
 
-    // ─── 多页引擎 ──
+    // ─── Multi-Page Engine ──
     function saveCurrentPage() {
       if (pages.length === 0) return;
       const clone = canvasWindow.cloneNode(true);
@@ -459,8 +458,8 @@
       if (pages.length === 0) {
         canvasWindow.innerHTML = `<div class="empty-state">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-          <h3>画布为空</h3>
-          <p>点击上方「导入文件」加载 HTML 文件，<br>或在右侧「源码」标签粘贴代码后点击「加载到画布」</p>
+          <h3>Canvas is empty</h3>
+          <p>Click <b>Import</b> to load an HTML file,<br>or paste source code and click "Load to Canvas"</p>
         </div>`;
         updatePageNav(); return;
       }
@@ -485,19 +484,19 @@
     function addPage() {
       saveCurrentPage();
       pages.splice(currentPage + 1, 0, `<div style="text-align:center; padding:40px 20px; font-family:system-ui,sans-serif;">
-  <h2 style="font-size:28px; color:#1e293b; margin-bottom:12px;">新建页面</h2>
-  <p style="font-size:16px; color:#64748b;">点击此处开始编辑...</p>
+  <h2 style="font-size:28px; color:#1e293b; margin-bottom:12px;">New Page</h2>
+  <p style="font-size:16px; color:#64748b;">Click here to start editing...</p>
 </div>`);
       renderPage(currentPage + 1);
-      showToast(`已插入新页（第 ${currentPage + 1} 页）`, 'success');
+      showToast(`New page inserted (Page ${currentPage + 1})`, 'success');
     }
 
     function deleteCurrentPage() {
-      if (pages.length <= 1) { showToast('至少保留一页', 'error'); return; }
-      if (!confirm(`确定删除第 ${currentPage + 1} 页？`)) return;
+      if (pages.length <= 1) { showToast('At least one page required', 'error'); return; }
+      if (!confirm(`Delete page ${currentPage + 1}?`)) return;
       pages.splice(currentPage, 1);
       renderPage(Math.min(currentPage, pages.length - 1));
-      showToast('页面已删除', 'success');
+      showToast('Page deleted', 'success');
     }
 
     btnFirst.addEventListener('click', () => { saveCurrentPage(); renderPage(0); });
@@ -512,12 +511,12 @@
         const val = parseInt(pageInput.value, 10);
         if (!isNaN(val) && val >= 1 && val <= pages.length) {
           saveCurrentPage(); renderPage(val - 1);
-        } else { pageInput.value = currentPage + 1; showToast('页码超出范围', 'error'); }
+        } else { pageInput.value = currentPage + 1; showToast('Page number out of range', 'error'); }
       }
     });
     pageInput.addEventListener('blur', () => { pageInput.value = currentPage + 1; });
 
-    // ─── HTML 解析为多页 ──
+    // ─── Parse HTML to Pages ──
     function parseHTMLToPages(rawHTML) {
       const parser = new DOMParser();
       const doc = parser.parseFromString(rawHTML, 'text/html');
@@ -542,13 +541,13 @@
       return [rawHTML];
     }
 
-    // ─── 导入 ──
+    // ─── Import ──
     importBtn.addEventListener('click', () => {
       const rawHTML = sourceCodeArea.value.trim();
-      if (!rawHTML) { showToast('请先粘贴 HTML 源码', 'error'); return; }
+      if (!rawHTML) { showToast('Please paste HTML source code first', 'error'); return; }
       pages = parseHTMLToPages(rawHTML);
       renderPage(0);
-      showToast(`已加载 ${pages.length} 页`, 'success');
+      showToast(`Loaded ${pages.length} page(s)`, 'success');
     });
 
     importFileBtn.addEventListener('click', () => fileInput.click());
@@ -560,23 +559,23 @@
         sourceCodeArea.value = text;
         pages = parseHTMLToPages(text);
         renderPage(0);
-        const name = file.name.replace(/\.html?$/i, '').replace(/[^a-zA-Z0-9_\u4e00-\u9fa5-]/g, '-');
+        const name = file.name.replace(/\.html?$/i, '').replace(/[^a-zA-Z0-9_-]/g, '-');
         pageIdInput.value = name;
-        showToast(`已导入：${file.name}（${pages.length} 页）`, 'success');
-      } catch { showToast('文件读取失败', 'error'); }
+        showToast(`Imported: ${file.name} (${pages.length} pages)`, 'success');
+      } catch { showToast('Failed to read file', 'error'); }
       fileInput.value = '';
     });
 
-    clearBtn.addEventListener('click', () => { sourceCodeArea.value = ''; pages = []; renderPage(0); showToast('画布已清空', 'success'); });
-    syncBtn.addEventListener('click', () => { saveCurrentPage(); sourceCodeArea.value = pages[currentPage] || ''; showToast('已从画布同步', 'success'); });
+    clearBtn.addEventListener('click', () => { sourceCodeArea.value = ''; pages = []; renderPage(0); showToast('Canvas cleared', 'success'); });
+    syncBtn.addEventListener('click', () => { saveCurrentPage(); sourceCodeArea.value = pages[currentPage] || ''; showToast('Synced canvas content', 'success'); });
     copyBtn.addEventListener('click', async () => {
       saveCurrentPage();
       const all = pages.join('\n<hr class="page-break">\n');
-      try { await navigator.clipboard.writeText(all); showToast('全部源码已复制', 'success'); }
-      catch { sourceCodeArea.value = all; sourceCodeArea.select(); document.execCommand('copy'); showToast('已复制', 'success'); }
+      try { await navigator.clipboard.writeText(all); showToast('All source copied', 'success'); }
+      catch { sourceCodeArea.value = all; sourceCodeArea.select(); document.execCommand('copy'); showToast('Copied', 'success'); }
     });
 
-    // ─── 编辑引擎 ──
+    // ─── Editable Engine ──
     function attachEditableEngine() {
       canvasWindow.querySelectorAll('*').forEach(node => {
         if (['IMG','VIDEO','AUDIO','SOURCE','BR','HR','INPUT','BUTTON','SCRIPT','STYLE','SVG'].includes(node.tagName)) return;
@@ -587,7 +586,7 @@
         media.addEventListener('click', (e) => {
           e.preventDefault(); e.stopPropagation();
           activeMediaNode = media;
-          document.getElementById('modalTitle').textContent = `替换${media.tagName === 'IMG' ? '图片' : '视频'}`;
+          document.getElementById('modalTitle').textContent = `Replace [${media.tagName === 'IMG' ? 'Image' : 'Video'}]`;
           mediaUrlInput.value = media.getAttribute('src') || '';
           mediaModal.style.display = 'block'; modalMask.style.display = 'block';
           setTimeout(() => mediaUrlInput.focus(), 100);
@@ -595,7 +594,7 @@
       });
     }
 
-    // ─── 浮动工具栏 ──
+    // ─── Floating Toolbar ──
     document.addEventListener('selectionchange', () => {
       const sel = window.getSelection();
       if (!sel.isCollapsed && canvasWindow.contains(sel.anchorNode)) {
@@ -614,13 +613,13 @@
     textColorPicker.addEventListener('input', (e) => { document.execCommand('foreColor', false, e.target.value); saveCurrentPage(); });
     bgColorPicker.addEventListener('input', (e) => { document.execCommand('hiliteColor', false, e.target.value); saveCurrentPage(); });
 
-    // ─── 资源替换弹窗 ──
+    // ─── Media Modal ──
     document.getElementById('modalSave').addEventListener('click', () => {
       const url = mediaUrlInput.value.trim();
       if (activeMediaNode && url) {
         activeMediaNode.setAttribute('src', url);
         if (activeMediaNode.tagName === 'VIDEO') activeMediaNode.load();
-        saveCurrentPage(); showToast('资源已替换', 'success');
+        saveCurrentPage(); showToast('Resource replaced', 'success');
       }
       closeModal();
     });
@@ -629,19 +628,19 @@
     document.getElementById('modalCancel').addEventListener('click', closeModal);
     modalMask.addEventListener('click', closeModal);
 
-    // ─── 预览全页 ──
+    // ─── Preview ──
     previewFullBtn.addEventListener('click', () => {
       saveCurrentPage();
-      if (pages.length === 0 || !pages[0].trim()) { showToast('画布为空', 'error'); return; }
-      const html = `<!DOCTYPE html>\n<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>${pageIdInput.value || '页面'}</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,sans-serif}.slide{min-height:100vh}.page-break{page-break-after:always;break-after:page}@media print{.slide{page-break-after:always}}</style></head><body>\n${pages.map(c => `<div class="slide">${c}</div>\n<div class="page-break"></div>`).join('\n')}</body></html>`;
+      if (pages.length === 0 || !pages[0].trim()) { showToast('Canvas is empty', 'error'); return; }
+      const html = `<!DOCTYPE html>\n<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>${pageIdInput.value || 'Page'}</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,sans-serif}.slide{min-height:100vh}.page-break{page-break-after:always;break-after:page}@media print{.slide{page-break-after:always}}</style></head><body>\n${pages.map(c => `<div class="slide">${c}</div>\n<div class="page-break"></div>`).join('\n')}</body></html>`;
       window.open(URL.createObjectURL(new Blob([html], { type: 'text/html' })), '_blank');
-      showToast('已在新窗口打开预览', 'success');
+      showToast('Opened in new window', 'success');
     });
 
-    // ─── 保存（localStorage）───
+    // ─── Save (localStorage) ──
     saveBtn.addEventListener('click', () => {
       saveCurrentPage();
-      if (pages.length === 0 || !pages[0].trim()) { showToast('没有可保存的内容', 'error'); return; }
+      if (pages.length === 0 || !pages[0].trim()) { showToast('Nothing to save', 'error'); return; }
       const key = 'html-page-studio-saved';
       const entry = { id: pageIdInput.value.trim() || 'untitled', pages, savedAt: new Date().toISOString() };
       let all = JSON.parse(localStorage.getItem(key) || '[]');
@@ -649,28 +648,28 @@
       all.unshift(entry);
       if (all.length > 50) all = all.slice(0, 50);
       localStorage.setItem(key, JSON.stringify(all));
-      showToast(`已保存「${entry.id}」（${pages.length} 页）`, 'success');
+      showToast(`Saved "${entry.id}" (${pages.length} pages)`, 'success');
       loadSavedPages();
     });
 
-    // ─── 导出 ──
+    // ─── Export ──
     exportBtn.addEventListener('click', () => {
       saveCurrentPage();
-      if (pages.length === 0 || !pages[0].trim()) { showToast('没有可导出的内容', 'error'); return; }
+      if (pages.length === 0 || !pages[0].trim()) { showToast('Nothing to export', 'error'); return; }
       const filename = (pageIdInput.value.trim() || 'my-page') + '.html';
-      const html = `<!DOCTYPE html>\n<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>${pageIdInput.value || '页面'}</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,sans-serif}.slide{min-height:100vh}.page-break{page-break-after:always;break-after:page}@media print{.slide{page-break-after:always}}</style></head><body>\n${pages.map(c => `<div class="slide">${c}</div>\n<div class="page-break"></div>`).join('\n')}</body></html>`;
+      const html = `<!DOCTYPE html>\n<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>${pageIdInput.value || 'Page'}</title><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:system-ui,sans-serif}.slide{min-height:100vh}.page-break{page-break-after:always;break-after:page}@media print{.slide{page-break-after:always}}</style></head><body>\n${pages.map(c => `<div class="slide">${c}</div>\n<div class="page-break"></div>`).join('\n')}</body></html>`;
       const a = document.createElement('a');
       a.href = URL.createObjectURL(new Blob([html], { type: 'text/html;charset=utf-8' }));
       a.download = filename; a.click();
-      showToast(`已下载 ${filename}`, 'success');
+      showToast(`Downloaded ${filename}`, 'success');
     });
 
-    // ─── 已保存列表 ──
+    // ─── Saved List ──
     function loadSavedPages() {
       const list = document.getElementById('savedList');
       const all = JSON.parse(localStorage.getItem('html-page-studio-saved') || '[]');
       if (all.length === 0) {
-        list.innerHTML = '<li class="saved-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg><div>暂无已保存项目</div></li>';
+        list.innerHTML = '<li class="saved-empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/></svg><div>No saved projects yet</div></li>';
         return;
       }
       list.innerHTML = all.map(p => {
@@ -679,8 +678,8 @@
         return `<li class="saved-item" onclick="window._restorePage('${p.id}')">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;color:var(--primary);flex-shrink:0;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           <span class="saved-item-name">${p.id}</span>
-          <span class="saved-meta">${t} · ${p.pages.length}页</span>
-          <button class="btn btn-sm btn-danger" style="padding:2px 6px;" onclick="event.stopPropagation();window._deletePage('${p.id}',this)" aria-label="删除">
+          <span class="saved-meta">${t} · ${p.pages.length}p</span>
+          <button class="btn btn-sm btn-danger" style="padding:2px 6px;" onclick="event.stopPropagation();window._deletePage('${p.id}',this)" aria-label="Delete">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
           </button>
         </li>`;
@@ -690,19 +689,19 @@
     window._restorePage = function(id) {
       const all = JSON.parse(localStorage.getItem('html-page-studio-saved') || '[]');
       const entry = all.find(p => p.id === id);
-      if (!entry) { showToast('未找到该记录', 'error'); return; }
+      if (!entry) { showToast('Not found', 'error'); return; }
       pages = entry.pages; pageIdInput.value = id; renderPage(0);
-      showToast(`已恢复「${id}」（${pages.length} 页）`, 'success');
+      showToast(`Restored "${id}" (${pages.length} pages)`, 'success');
     };
     window._deletePage = function(id) {
-      if (!confirm(`确定删除「${id}」？`)) return;
+      if (!confirm(`Delete "${id}"?`)) return;
       let all = JSON.parse(localStorage.getItem('html-page-studio-saved') || '[]');
       all = all.filter(p => p.id !== id);
       localStorage.setItem('html-page-studio-saved', JSON.stringify(all));
-      showToast('已删除', 'success'); loadSavedPages();
+      showToast('Deleted', 'success'); loadSavedPages();
     };
 
-    // ─── 初始化 ──
+    // ─── Init ──
     pages = [sourceCodeArea.value];
     renderPage(0);
   </script>
