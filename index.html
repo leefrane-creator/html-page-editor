@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML Page Studio - 在线可视化编辑器</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #f4f6f9; color: #333; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+    /* 顶部导航栏 */
+    .header { background: #fff; height: 60px; padding: 0 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); flex-shrink: 0; }
+    .logo { font-size: 18px; font-weight: bold; color: #0f172a; display: flex; align-items: center; gap: 8px; }
+    .logo-tag { font-size: 11px; background: #3b82f6; color: #fff; padding: 2px 6px; border-radius: 4px; }
+    .actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+    /* 通用按钮 */
+    .btn { padding: 7px 14px; border: 1px solid #cbd5e1; border-radius: 6px; background: #fff; color: #334155; cursor: pointer; font-weight: 500; font-size: 13px; transition: all 0.2s; white-space: nowrap; }
+    .btn:hover { background: #f8fafc; border-color: #94a3b8; }
+    .btn-primary { background: #3b82f6; color: #fff; border-color: #3b82f6; }
+    .btn-primary:hover { background: #2563eb; border-color: #2563eb; }
+    .btn-danger { background: #ef4444; color: #fff; border-color: #ef4444; }
+    .btn-danger:hover { background: #dc2626; border-color: #dc2626; }
+    .btn-sm { padding: 4px 9px; font-size: 12px; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* 主工作区 */
+    .main-layout { flex: 1; display: flex; overflow: hidden; }
+
+    /* 左侧：画布 */
+    .canvas-area { flex: 1; padding: 24px 24px 72px 24px; overflow: auto; display: flex; flex-direction: column; align-items: flex-start; position: relative; background: #f4f6f9; }
+    .canvas-label { font-size: 12px; color: #94a3b8; margin-bottom: 12px; letter-spacing: 0.05em; text-transform: uppercase; }
+    .canvas-window { min-width: 600px; width: max-content; background: #fff; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); min-height: auto; padding: 40px; position: relative; outline: none; }
+
+    /* 页面导航条 */
+    .page-nav { position: fixed; bottom: 0; left: 0; width: calc(100% - 400px); height: 48px; background: #fff; border-top: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 0 20px; z-index: 100; box-shadow: 0 -2px 8px rgba(0,0,0,0.04); }
+    .page-nav-btn { width: 30px; height: 30px; border: 1px solid #e2e8f0; border-radius: 6px; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; transition: all 0.2s; }
+    .page-nav-btn:hover:not(:disabled) { background: #f1f5f9; border-color: #cbd5e1; }
+    .page-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .page-indicator { font-size: 13px; color: #475569; font-weight: 500; min-width: 80px; text-align: center; }
+    .page-indicator input { width: 38px; text-align: center; border: 1px solid #e2e8f0; border-radius: 4px; padding: 2px 4px; font-size: 13px; }
+
+    /* 右侧：控制台 */
+    .sidebar { width: 400px; background: #fff; border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; }
+    .sidebar-panel { padding: 16px; border-bottom: 1px solid #f1f5f9; }
+    .sidebar-panel:last-child { border-bottom: none; flex: 1; display: flex; flex-direction: column; }
+    .panel-title { font-size: 12px; font-weight: 600; margin-bottom: 10px; color: #1e293b; display: flex; align-items: center; gap: 6px; }
+    .panel-title::before { content: ''; width: 3px; height: 12px; background: #3b82f6; border-radius: 2px; display: inline-block; }
+    .input-field { width: 100%; padding: 7px 10px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 13px; margin-bottom: 8px; outline: none; transition: border-color 0.2s; }
+    .input-field:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+    .code-textarea { width: 100%; height: 200px; font-family: 'Fira Code', 'Consolas', monospace; font-size: 12px; line-height: 1.6; background: #1e293b; color: #38bdf8; padding: 12px; border-radius: 6px; resize: vertical; border: none; outline: none; }
+    .code-textarea:focus { box-shadow: 0 0 0 2px #3b82f6; }
+
+    /* 浮动文字工具栏 */
+    .text-toolbar { position: fixed; background: #1e293b; color: #fff; padding: 5px 7px; border-radius: 8px; display: none; gap: 3px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.4); z-index: 9999; align-items: center; }
+    .tool-btn { background: transparent; border: none; color: #e2e8f0; padding: 4px 8px; cursor: pointer; border-radius: 4px; font-size: 12px; font-weight: bold; transition: background 0.15s; }
+    .tool-btn:hover { background: #334155; color: #fff; }
+    .tool-divider { width: 1px; height: 16px; background: #334155; margin: 0 3px; }
+    .tool-color { width: 20px; height: 20px; border: none; padding: 0; background: transparent; cursor: pointer; border-radius: 3px; }
+
+    /* 已保存列表 */
+    .saved-list { list-style: none; flex: 1; overflow-y: auto; }
+    .saved-item { display: flex; align-items: center; justify-content: space-between; padding: 7px 8px; border-radius: 6px; background: #f8fafc; margin-bottom: 5px; font-size: 12px; }
+    .saved-item:hover { background: #f1f5f9; }
+    .saved-item-name { color: #3b82f6; cursor: pointer; font-weight: 500; flex: 1; }
+    .saved-item-name:hover { text-decoration: underline; }
+    .saved-meta { font-size: 11px; color: #94a3b8; margin: 0 6px; }
+    .saved-empty { font-size: 12px; color: #94a3b8; text-align: center; padding: 24px 0; }
+
+    /* 弹窗 */
+    .modal-mask { position: fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(15,23,42,0.6); display:none; z-index:1000; backdrop-filter: blur(3px); }
+    .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #fff; padding: 24px; border-radius: 10px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); display: none; z-index: 1001; width: 440px; }
+    .modal h3 { font-size: 15px; margin-bottom: 14px; color: #0f172a; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+
+    /* 状态提示 */
+    .toast { position: fixed; bottom: 76px; left: 50%; transform: translateX(-50%); background: #1e293b; color: #fff; padding: 10px 22px; border-radius: 8px; font-size: 13px; z-index: 9999; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+    .toast.show { opacity: 1; }
+    .toast.success { background: #16a34a; }
+    .toast.error { background: #dc2626; }
+
+    /* 画布内可编辑元素 */
+    .canvas-window [contenteditable="true"] { transition: outline 0.15s; border-radius: 2px; }
+    .canvas-window [contenteditable="true"]:hover { outline: 2px dashed #93c5fd; }
+    .canvas-window [contenteditable="true"]:focus { outline: 2px solid #3b82f6; background: rgba(239,246,255,0.5); }
+    .canvas-window img:hover, .canvas-window video:hover { outline: 3px solid #f59e0b; cursor: pointer; opacity: 0.92; }
+
+    /* 标签页 */
+    .tab-group { display: flex; border-bottom: 1px solid #e2e8f0; }
+    .tab { flex: 1; padding: 9px; text-align: center; font-size: 12px; font-weight: 500; cursor: pointer; color: #64748b; border-bottom: 2px solid transparent; transition: all 0.2s; }
+    .tab.active { color: #3b82f6; border-bottom-color: #3b82f6; }
+    .tab-panel { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+    .tab-panel.active { display: flex; }
+
+    /* 分享提示 */
+    .share-hint { background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; padding: 12px 16px; border-radius: 8px; font-size: 12px; line-height: 1.7; margin-bottom: 12px; }
+    .share-hint strong { font-size: 13px; }
+  </style>
+</head>
+<body>
+
+  <!-- 顶部导航栏 -->
+  <div class="header">
+    <div class="logo">
+      HTML Page Studio <span class="logo-tag">在线版</span>
+    </div>
+    <div class="actions">
+      <input type="text" id="pageIdInput" class="input-field" style="margin-bottom:0; width:150px;" value="my-page" placeholder="页面ID">
+      <button class="btn" id="importFileBtn" title="导入本地 HTML 文件">📂 导入</button>
+      <input type="file" id="fileInput" accept=".html,.htm" style="display:none;">
+      <button class="btn" id="saveBtn">💾 保存</button>
+      <button class="btn" id="exportBtn">📦 导出HTML</button>
+      <button class="btn btn-primary" id="previewFullBtn">👁 预览全页</button>
+    </div>
+  </div>
+
+  <!-- 主工作区 -->
+  <div class="main-layout">
+    <!-- 画布区 -->
+    <div class="canvas-area">
+      <div class="text-toolbar" id="textToolbar">
+        <button class="tool-btn" data-cmd="bold" title="加粗"><b>B</b></button>
+        <button class="tool-btn" data-cmd="italic" title="斜体"><i>I</i></button>
+        <button class="tool-btn" data-cmd="underline" title="下划线"><u>U</u></button>
+        <div class="tool-divider"></div>
+        <button class="tool-btn" data-cmd="justifyLeft">≡</button>
+        <button class="tool-btn" data-cmd="justifyCenter">☰</button>
+        <button class="tool-btn" data-cmd="justifyRight">≡</button>
+        <div class="tool-divider"></div>
+        <input type="color" class="tool-color" id="textColorPicker" title="字体颜色" value="#333333">
+        <input type="color" class="tool-color" id="bgColorPicker" title="背景高亮" value="#ffff00">
+      </div>
+
+      <div class="canvas-label">可视化编辑画布</div>
+      <div class="canvas-window" id="canvasWindow">
+        <div style="text-align:center; color:#94a3b8; margin-top: 120px;">
+          <div style="font-size:48px; margin-bottom:16px;">✏️</div>
+          <h3 style="font-size:18px; color:#64748b; margin-bottom:8px;">当前画布为空</h3>
+          <p style="font-size:14px;">点击右上角「📂 导入」加载 HTML 文件，或粘贴源码后点击「加载到画布」</p>
+        </div>
+      </div>
+
+      <!-- 页面导航条 -->
+      <div class="page-nav" id="pageNav">
+        <button class="page-nav-btn" id="btnFirst" title="首页">⏮</button>
+        <button class="page-nav-btn" id="btnPrev" title="上一页">◀</button>
+        <div class="page-indicator">
+          <input type="number" id="pageInput" min="1" value="1"> / <span id="pageTotal">1</span>
+        </div>
+        <button class="page-nav-btn" id="btnNext" title="下一页">▶</button>
+        <button class="page-nav-btn" id="btnLast" title="末页">⏭</button>
+        <div style="width:1px; height:20px; background:#e2e8f0;"></div>
+        <button class="btn btn-sm btn-primary" id="btnAddPage">＋ 新页</button>
+        <button class="btn btn-sm btn-danger" id="btnDelPage">🗑 删页</button>
+      </div>
+    </div>
+
+    <!-- 右侧控制台 -->
+    <div class="sidebar">
+      <div class="tab-group">
+        <div class="tab active" data-tab="editor">源码编辑</div>
+        <div class="tab" data-tab="saved">已保存</div>
+        <div class="tab" data-tab="help">使用说明</div>
+      </div>
+
+      <!-- 编辑标签 -->
+      <div class="tab-panel active" id="tab-editor">
+        <div class="sidebar-panel">
+          <div class="panel-title">HTML 源码</div>
+          <textarea class="code-textarea" id="sourceCodeArea" placeholder="粘贴 HTML 代码..."></textarea>
+          <div style="display:flex; gap:8px; margin-top:10px;">
+            <button class="btn btn-primary" id="importBtn" style="flex:1;">⚡ 加载到画布</button>
+            <button class="btn" id="clearBtn" style="width:70px;">清空</button>
+          </div>
+        </div>
+        <div class="sidebar-panel">
+          <div class="panel-title">工具</div>
+          <button class="btn" style="width:100%; margin-bottom:6px;" id="syncBtn">↩ 同步画布内容</button>
+          <button class="btn" style="width:100%;" id="copyBtn">📋 复制全部源码</button>
+        </div>
+      </div>
+
+      <!-- 已保存标签 -->
+      <div class="tab-panel" id="tab-saved">
+        <div class="sidebar-panel">
+          <div class="panel-title">已保存项目（本地）</div>
+          <button class="btn btn-sm" id="refreshBtn" style="margin-bottom:8px;">🔄 刷新</button>
+          <ul class="saved-list" id="savedList">
+            <li class="saved-empty">暂无保存记录</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 使用说明 -->
+      <div class="tab-panel" id="tab-help">
+        <div class="sidebar-panel">
+          <div class="share-hint">
+            <strong>🌐 如何分享给朋友</strong><br>
+            ① 点击「📦 导出HTML」下载文件<br>
+            ② 把 .html 文件发给对方即可打开
+          </div>
+          <div style="font-size:12px; color:#475569; line-height:1.8;">
+            <p><b>① 导入内容</b></p>
+            <p>方式一：点击「📂 导入」选择本地 .html 文件</p>
+            <p style="margin-bottom:8px;">方式二：粘贴 HTML 源码到左侧文本框，点击「⚡ 加载到画布」</p>
+            <p><b>② 编辑</b></p>
+            <p style="margin-bottom:8px;">点击文字直接编辑，选中文字弹出工具栏（加粗/颜色等）</p>
+            <p><b>③ 多页管理</b></p>
+            <p style="margin-bottom:8px;">底部导航条翻页，支持插入/删除页面</p>
+            <p><b>④ 分享</b></p>
+            <p>「👁 预览全页」新窗口查看完整效果<br>「📦 导出HTML」下载可独立分享的文件</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 多媒体修改弹窗 -->
+  <div class="modal-mask" id="modalMask"></div>
+  <div class="modal" id="mediaModal">
+    <h3 id="modalTitle">替换资源链接</h3>
+    <label style="font-size:12px; color:#64748b; display:block; margin-bottom:4px;">资源 URL</label>
+    <input type="text" id="mediaUrlInput" class="input-field" placeholder="https://...">
+    <div class="modal-actions">
+      <button class="btn" id="modalCancel">取消</button>
+      <button class="btn btn-primary" id="modalSave">确认</button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ─── DOM 引用 ───────────────────────────────────────────
+    const canvasWindow   = document.getElementById('canvasWindow');
+    const sourceCodeArea = document.getElementById('sourceCodeArea');
+    const importBtn      = document.getElementById('importBtn');
+    const importFileBtn  = document.getElementById('importFileBtn');
+    const fileInput      = document.getElementById('fileInput');
+    const previewFullBtn = document.getElementById('previewFullBtn');
+    const saveBtn        = document.getElementById('saveBtn');
+    const exportBtn      = document.getElementById('exportBtn');
+    const pageIdInput    = document.getElementById('pageIdInput');
+    const clearBtn       = document.getElementById('clearBtn');
+    const syncBtn        = document.getElementById('syncBtn');
+    const copyBtn        = document.getElementById('copyBtn');
+    const textToolbar    = document.getElementById('textToolbar');
+    const textColorPicker= document.getElementById('textColorPicker');
+    const bgColorPicker  = document.getElementById('bgColorPicker');
+    const mediaModal     = document.getElementById('mediaModal');
+    const modalMask      = document.getElementById('modalMask');
+    const mediaUrlInput  = document.getElementById('mediaUrlInput');
+    const toastEl        = document.getElementById('toast');
+
+    const btnFirst   = document.getElementById('btnFirst');
+    const btnPrev    = document.getElementById('btnPrev');
+    const btnNext    = document.getElementById('btnNext');
+    const btnLast    = document.getElementById('btnLast');
+    const btnAddPage = document.getElementById('btnAddPage');
+    const btnDelPage = document.getElementById('btnDelPage');
+    const pageInput  = document.getElementById('pageInput');
+    const pageTotal  = document.getElementById('pageTotal');
+
+    let activeMediaNode = null;
+    let toastTimer = null;
+    let pages = [];
+    let currentPage = 0;
+
+    // ─── Toast ──────────────────────────────────────────────
+    function showToast(msg, type = '') {
+      toastEl.textContent = msg;
+      toastEl.className = `toast show ${type}`;
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => { toastEl.className = 'toast'; }, 3000);
+    }
+
+    // ─── 标签页 ──────────────────────────────────────────────
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+        if (tab.dataset.tab === 'saved') loadSavedPages();
+      });
+    });
+
+    // 默认填充示例
+    sourceCodeArea.value = `<div style="text-align:center; padding:40px 20px; font-family:system-ui,sans-serif;">
+  <h1 style="font-size:36px; color:#1e293b; margin-bottom:12px;">新一代智能云平台</h1>
+  <p style="font-size:16px; color:#64748b; margin-bottom:28px;">点击这段文字可以直接编辑，选中文字弹出格式工具栏</p>
+  <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&auto=format&fit=crop" style="width:100%;max-width:500px;border-radius:12px;margin-bottom:24px;" />
+  <div style="display:flex;justify-content:center;gap:16px;flex-wrap:wrap;">
+    <button style="padding:12px 28px;background:#3b82f6;color:#fff;border:none;border-radius:8px;font-size:16px;cursor:pointer;">立即开始</button>
+    <button style="padding:12px 28px;background:#fff;color:#334155;border:1px solid #e2e8f0;border-radius:8px;font-size:16px;cursor:pointer;">了解更多</button>
+  </div>
+</div>`;
+
+    // ─── 多页引擎 ────────────────────────────────────────────
+    function saveCurrentPage() {
+      if (pages.length === 0) return;
+      const clone = canvasWindow.cloneNode(true);
+      clone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+      pages[currentPage] = clone.innerHTML.trim();
+    }
+
+    function renderPage(index) {
+      if (pages.length === 0) {
+        canvasWindow.innerHTML = `<div style="text-align:center; color:#94a3b8; margin-top:120px;">
+          <div style="font-size:48px; margin-bottom:16px;">✏️</div>
+          <h3 style="font-size:18px; color:#64748b; margin-bottom:8px;">当前画布为空</h3>
+          <p style="font-size:14px;">点击右上角「📂 导入」加载 HTML 文件，或粘贴源码后点击「加载到画布」</p>
+        </div>`;
+        updatePageNav(); return;
+      }
+      currentPage = Math.max(0, Math.min(index, pages.length - 1));
+      canvasWindow.innerHTML = pages[currentPage];
+      attachEditableEngine();
+      updatePageNav();
+      sourceCodeArea.value = pages[currentPage];
+    }
+
+    function updatePageNav() {
+      const total = pages.length || 1;
+      pageInput.value = currentPage + 1;
+      pageTotal.textContent = total;
+      btnFirst.disabled = currentPage <= 0;
+      btnPrev.disabled  = currentPage <= 0;
+      btnNext.disabled  = currentPage >= total - 1;
+      btnLast.disabled  = currentPage >= total - 1;
+      btnDelPage.disabled = total <= 1;
+    }
+
+    function addPage() {
+      saveCurrentPage();
+      pages.splice(currentPage + 1, 0, `<div style="text-align:center; padding:40px 20px; font-family:system-ui,sans-serif;">
+  <h2 style="font-size:28px; color:#1e293b; margin-bottom:12px;">新页面</h2>
+  <p style="font-size:16px; color:#64748b;">点击此处开始编辑内容...</p>
+</div>`);
+      renderPage(currentPage + 1);
+      showToast(`✅ 已插入新页（第 ${currentPage + 1} 页）`, 'success');
+    }
+
+    function deleteCurrentPage() {
+      if (pages.length <= 1) { showToast('至少保留一页', 'error'); return; }
+      if (!confirm(`确定删除第 ${currentPage + 1} 页吗？`)) return;
+      pages.splice(currentPage, 1);
+      renderPage(Math.min(currentPage, pages.length - 1));
+      showToast('已删除当前页', 'success');
+    }
+
+    btnFirst.addEventListener('click', () => { saveCurrentPage(); renderPage(0); });
+    btnPrev.addEventListener('click', () => { saveCurrentPage(); renderPage(currentPage - 1); });
+    btnNext.addEventListener('click', () => { saveCurrentPage(); renderPage(currentPage + 1); });
+    btnLast.addEventListener('click', () => { saveCurrentPage(); renderPage(pages.length - 1); });
+    btnAddPage.addEventListener('click', addPage);
+    btnDelPage.addEventListener('click', deleteCurrentPage);
+
+    pageInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const val = parseInt(pageInput.value, 10);
+        if (!isNaN(val) && val >= 1 && val <= pages.length) {
+          saveCurrentPage(); renderPage(val - 1);
+        } else {
+          pageInput.value = currentPage + 1;
+          showToast('页码超出范围', 'error');
+        }
+      }
+    });
+    pageInput.addEventListener('blur', () => { pageInput.value = currentPage + 1; });
+
+    // ─── HTML 多页解析 ──────────────────────────────────────
+    function parseHTMLToPages(rawHTML) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(rawHTML, 'text/html');
+      const slides = doc.querySelectorAll('.slide');
+      if (slides.length > 1) {
+        const styles = Array.from(doc.querySelectorAll('style, link[rel="stylesheet"]')).map(s => s.outerHTML).join('\n');
+        const editorOverride = `<style>.slide{position:relative!important;top:auto!important;left:auto!important;width:100%!important;height:auto!important;min-height:600px!important;display:flex!important;}body{overflow:visible!important;height:auto!important;}</style>`;
+        return Array.from(slides).map(slide => {
+          const h = slide.outerHTML.replace(/class="slide[^"]*"/, 'class="slide active"');
+          return `${styles}${editorOverride}\n<div style="min-height:600px">${h}</div>`;
+        });
+      }
+      const splitB = /<hr[^>]*class=["']?page-break["']?[^>]*>/gi;
+      if (splitB.test(rawHTML)) return rawHTML.split(splitB).map(s => s.trim()).filter(Boolean);
+      const splitHR = /<hr\s*\/?>/gi;
+      if ((rawHTML.match(splitHR) || []).length >= 2) return rawHTML.split(splitHR).map(s => s.trim()).filter(Boolean);
+      const sections = doc.querySelectorAll('section, article');
+      if (sections.length >= 2) {
+        const styles = Array.from(doc.querySelectorAll('style, link[rel="stylesheet"]')).map(s => s.outerHTML).join('\n');
+        return Array.from(sections).map(sec => `${styles}\n${sec.outerHTML}`);
+      }
+      return [rawHTML];
+    }
+
+    // ─── 导入 ───────────────────────────────────────────────
+    importBtn.addEventListener('click', () => {
+      const rawHTML = sourceCodeArea.value.trim();
+      if (!rawHTML) { showToast('请先输入 HTML 源码', 'error'); return; }
+      pages = parseHTMLToPages(rawHTML);
+      renderPage(0);
+      showToast(`✅ 已加载 ${pages.length} 页到画布`, 'success');
+    });
+
+    importFileBtn.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      try {
+        const text = await file.text();
+        sourceCodeArea.value = text;
+        pages = parseHTMLToPages(text);
+        renderPage(0);
+        const name = file.name.replace(/\.html?$/i, '').replace(/[^a-zA-Z0-9_-]/g, '-');
+        pageIdInput.value = name;
+        showToast(`📂 已导入：${file.name}（${pages.length} 页）`, 'success');
+      } catch {
+        showToast('❌ 文件读取失败', 'error');
+      }
+      fileInput.value = '';
+    });
+
+    clearBtn.addEventListener('click', () => {
+      sourceCodeArea.value = '';
+      pages = [];
+      renderPage(0);
+      showToast('画布已清空', 'success');
+    });
+
+    syncBtn.addEventListener('click', () => {
+      saveCurrentPage();
+      sourceCodeArea.value = pages[currentPage] || '';
+      showToast('已同步当前页内容', 'success');
+    });
+
+    copyBtn.addEventListener('click', async () => {
+      saveCurrentPage();
+      const all = pages.join('\n<hr class="page-break">\n');
+      try {
+        await navigator.clipboard.writeText(all);
+        showToast('📋 已复制全部源码', 'success');
+      } catch {
+        sourceCodeArea.value = all;
+        sourceCodeArea.select();
+        document.execCommand('copy');
+        showToast('📋 已复制', 'success');
+      }
+    });
+
+    // ─── 可编辑引擎 ─────────────────────────────────────────
+    function attachEditableEngine() {
+      canvasWindow.querySelectorAll('*').forEach(node => {
+        if (['IMG','VIDEO','AUDIO','SOURCE','BR','HR','INPUT','BUTTON','SCRIPT','STYLE','SVG'].includes(node.tagName)) return;
+        const hasText = Array.from(node.childNodes).some(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim());
+        if (hasText) {
+          node.setAttribute('contenteditable', 'true');
+          node.addEventListener('input', saveCurrentPage);
+        }
+      });
+      canvasWindow.querySelectorAll('img, video').forEach(media => {
+        media.addEventListener('click', (e) => {
+          e.preventDefault(); e.stopPropagation();
+          activeMediaNode = media;
+          document.getElementById('modalTitle').textContent = `替换 [${media.tagName === 'IMG' ? '图片' : '视频'}]`;
+          mediaUrlInput.value = media.getAttribute('src') || '';
+          mediaModal.style.display = 'block';
+          modalMask.style.display = 'block';
+          setTimeout(() => mediaUrlInput.focus(), 100);
+        });
+      });
+    }
+
+    // ─── 浮动工具栏 ─────────────────────────────────────────
+    document.addEventListener('selectionchange', () => {
+      const sel = window.getSelection();
+      if (!sel.isCollapsed && canvasWindow.contains(sel.anchorNode)) {
+        const rect = sel.getRangeAt(0).getBoundingClientRect();
+        textToolbar.style.left = `${rect.left + rect.width / 2 - 110}px`;
+        textToolbar.style.top  = `${rect.top - 44}px`;
+        textToolbar.style.display = 'flex';
+      } else {
+        setTimeout(() => {
+          if (window.getSelection().isCollapsed) textToolbar.style.display = 'none';
+        }, 200);
+      }
+    });
+
+    textToolbar.addEventListener('mousedown', (e) => {
+      const cmd = e.target.closest('[data-cmd]')?.getAttribute('data-cmd');
+      if (cmd) { e.preventDefault(); document.execCommand(cmd, false, null); saveCurrentPage(); }
+    });
+    textColorPicker.addEventListener('input', (e) => { document.execCommand('foreColor', false, e.target.value); saveCurrentPage(); });
+    bgColorPicker.addEventListener('input', (e) => { document.execCommand('hiliteColor', false, e.target.value); saveCurrentPage(); });
+
+    // ─── 多媒体弹窗 ─────────────────────────────────────────
+    document.getElementById('modalSave').addEventListener('click', () => {
+      const url = mediaUrlInput.value.trim();
+      if (activeMediaNode && url) {
+        activeMediaNode.setAttribute('src', url);
+        if (activeMediaNode.tagName === 'VIDEO') activeMediaNode.load();
+        saveCurrentPage();
+        showToast('✅ 资源已替换', 'success');
+      }
+      closeModal();
+    });
+    mediaUrlInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('modalSave').click();
+      if (e.key === 'Escape') closeModal();
+    });
+    function closeModal() { mediaModal.style.display = 'none'; modalMask.style.display = 'none'; activeMediaNode = null; }
+    document.getElementById('modalCancel').addEventListener('click', closeModal);
+    modalMask.addEventListener('click', closeModal);
+
+    // ─── 预览全页（新窗口）──────────────────────────────────
+    previewFullBtn.addEventListener('click', () => {
+      saveCurrentPage();
+      if (pages.length === 0 || !pages[0].trim()) { showToast('画布为空，请先加载内容', 'error'); return; }
+      const html = `<!DOCTYPE html>\n<html lang="zh-CN">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width,initial-scale=1.0">\n  <title>${pageIdInput.value || 'My Page'}</title>\n  <style>\n    *{margin:0;padding:0;box-sizing:border-box}\n    body{font-family:system-ui,sans-serif}\n    .slide{min-height:100vh}\n    .page-break{page-break-after:always;break-after:page}\n    @media print{.slide{page-break-after:always}}\n  </style>\n</head>\n<body>\n${pages.map(c => `<div class="slide">${c}</div>\n<div class="page-break"></div>`).join('\n')}\n</body>\n</html>`;
+      const blob = new Blob([html], { type: 'text/html' });
+      window.open(URL.createObjectURL(blob), '_blank');
+      showToast('👁 已新窗口打开完整预览', 'success');
+    });
+
+    // ─── 保存到 localStorage ────────────────────────────────
+    saveBtn.addEventListener('click', () => {
+      saveCurrentPage();
+      if (pages.length === 0 || !pages[0].trim()) { showToast('画布为空，无法保存', 'error'); return; }
+      const key = 'html-page-studio-saved';
+      const entry = { id: pageIdInput.value.trim() || 'untitled', pages: pages, savedAt: new Date().toISOString() };
+      let all = JSON.parse(localStorage.getItem(key) || '[]');
+      all = all.filter(p => p.id !== entry.id);
+      all.unshift(entry);
+      if (all.length > 50) all = all.slice(0, 50);
+      localStorage.setItem(key, JSON.stringify(all));
+      showToast(`💾 已保存「${entry.id}」（${pages.length}页）`, 'success');
+      loadSavedPages();
+    });
+
+    // ─── 导出 HTML 文件下载 ─────────────────────────────────
+    exportBtn.addEventListener('click', () => {
+      saveCurrentPage();
+      if (pages.length === 0 || !pages[0].trim()) { showToast('画布为空，无法导出', 'error'); return; }
+      const filename = (pageIdInput.value.trim() || 'my-page') + '.html';
+      const html = `<!DOCTYPE html>\n<html lang="zh-CN">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width,initial-scale=1.0">\n  <title>${pageIdInput.value || 'My Page'}</title>\n  <style>\n    *{margin:0;padding:0;box-sizing:border-box}\n    body{font-family:system-ui,sans-serif}\n    .slide{min-height:100vh}\n    .page-break{page-break-after:always;break-after:page}\n    @media print{.slide{page-break-after:always}}\n  </style>\n</head>\n<body>\n${pages.map(c => `<div class="slide">${c}</div>\n<div class="page-break"></div>`).join('\n')}\n</body>\n</html>`;
+      const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = filename;
+      a.click();
+      showToast(`📦 已下载 ${filename}`, 'success');
+    });
+
+    // ─── 已保存列表 ─────────────────────────────────────────
+    function loadSavedPages() {
+      const list = document.getElementById('savedList');
+      const all = JSON.parse(localStorage.getItem('html-page-studio-saved') || '[]');
+      if (all.length === 0) {
+        list.innerHTML = '<li class="saved-empty">暂无保存记录</li>'; return;
+      }
+      list.innerHTML = all.map(p => {
+        const d = new Date(p.savedAt);
+        const t = `${d.getMonth()+1}/${d.getDate()} ${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+        return `<li class="saved-item">
+          <span class="saved-item-name" onclick="window._restorePage('${p.id}')">${p.id}</span>
+          <span class="saved-meta">${t} · ${p.pages.length}页</span>
+          <button class="btn btn-sm btn-danger" style="padding:1px 5px;font-size:11px;" onclick="event.stopPropagation();window._deletePage('${p.id}',this)">删除</button>
+        </li>`;
+      }).join('');
+    }
+
+    window._restorePage = function(id) {
+      const all = JSON.parse(localStorage.getItem('html-page-studio-saved') || '[]');
+      const entry = all.find(p => p.id === id);
+      if (!entry) { showToast('未找到该记录', 'error'); return; }
+      pages = entry.pages;
+      pageIdInput.value = id;
+      renderPage(0);
+      showToast(`已恢复「${id}」（${pages.length}页）`, 'success');
+    };
+
+    window._deletePage = function(id, btn) {
+      if (!confirm(`确定删除「${id}」？`)) return;
+      let all = JSON.parse(localStorage.getItem('html-page-studio-saved') || '[]');
+      all = all.filter(p => p.id !== id);
+      localStorage.setItem('html-page-studio-saved', JSON.stringify(all));
+      showToast('已删除', 'success');
+      loadSavedPages();
+    };
+
+    document.getElementById('refreshBtn').addEventListener('click', loadSavedPages);
+
+    // ─── 初始化 ──────────────────────────────────────────────
+    pages = [sourceCodeArea.value];
+    renderPage(0);
+  </script>
+</body>
+</html>
